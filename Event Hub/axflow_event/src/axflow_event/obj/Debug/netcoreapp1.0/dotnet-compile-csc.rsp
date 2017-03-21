@@ -7,8 +7,8 @@
 -debug:full
 -nostdlib
 -nologo
-"C:\Users\niericso\Documents\Event Hub\axflow_event\src\axflow_event\obj\Debug\netcoreapp1.0\dotnet-compile.assemblyinfo.cs"
--out:"C:\Users\niericso\Documents\Event Hub\axflow_event\src\axflow_event\bin\Debug\netcoreapp1.0\axflow_event.dll"
+"C:\Users\niericso\Documents\axflow\Event Hub\axflow_event\src\axflow_event\obj\Debug\netcoreapp1.0\dotnet-compile.assemblyinfo.cs"
+-out:"C:\Users\niericso\Documents\axflow\Event Hub\axflow_event\src\axflow_event\bin\Debug\netcoreapp1.0\axflow_event.dll"
 -r:"C:\Users\niericso\.nuget\packages\Microsoft.Azure.Amqp\2.0.4\lib\netstandard1.3\Microsoft.Azure.Amqp.dll"
 -r:"C:\Users\niericso\.nuget\packages\Microsoft.Azure.EventHubs\1.0.0\lib\netstandard1.3\Microsoft.Azure.EventHubs.dll"
 -r:"C:\Users\niericso\.nuget\packages\Microsoft.CSharp\4.0.1\ref\netstandard1.0\Microsoft.CSharp.dll"
@@ -86,5 +86,5 @@
 -r:"C:\Users\niericso\.nuget\packages\System.Threading.Timer\4.0.1\ref\netstandard1.2\System.Threading.Timer.dll"
 -r:"C:\Users\niericso\.nuget\packages\System.Xml.ReaderWriter\4.0.11\ref\netstandard1.3\System.Xml.ReaderWriter.dll"
 -r:"C:\Users\niericso\.nuget\packages\System.Xml.XDocument\4.0.11\ref\netstandard1.3\System.Xml.XDocument.dll"
-"C:\Users\niericso\Documents\Event Hub\axflow_event\src\axflow_event\Program.cs"
-"C:\Users\niericso\Documents\Event Hub\axflow_event\src\axflow_event\Properties\AssemblyInfo.cs"
+"C:\Users\niericso\Documents\axflow\Event Hub\axflow_event\src\axflow_event\Program.cs"
+"C:\Users\niericso\Documents\axflow\Event Hub\axflow_event\src\axflow_event\Properties\AssemblyInfo.cs"

@@ -88,6 +88,31 @@ namespace axflow_event
                             t.Time = DateTime.Now.ToString();
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(t);
                             break;
+                        case "Cooler":
+                            Cooler c = (Cooler)DeviceArray[i];
+                            c.Temperature = 5 * rf;
+                            c.Time = DateTime.Now.ToString();
+                            message = Newtonsoft.Json.JsonConvert.SerializeObject(c);
+                            break;
+                        case "Heater":
+                            Heater h = (Heater)DeviceArray[i];
+                            h.Temperature = 5 * rf;
+                            h.Time = DateTime.Now.ToString();
+                            message = Newtonsoft.Json.JsonConvert.SerializeObject(h);
+                            break;
+                        case "Controller":
+                            Controller con = (Controller)DeviceArray[i];
+                            con.FlowRate = 1200 * rf;
+                            con.Time = DateTime.Now.ToString();
+                            message = Newtonsoft.Json.JsonConvert.SerializeObject(con);
+                            break;
+                        case "Analyser":
+                            Analyser a = (Analyser)DeviceArray[i];
+                            float percentage = 100 * rf;
+                            a.CulturePercentage = (int)percentage;
+                            a.Time = DateTime.Now.ToString();
+                            message = Newtonsoft.Json.JsonConvert.SerializeObject(a);
+                            break;
                         default:
                             break;
                     }
@@ -231,7 +256,7 @@ namespace axflow_event
 
     class Controller : Device
     {
-        public int FlowRate { get; set; }
+        public float FlowRate { get; set; }
 
         public Controller()
         {
@@ -243,7 +268,6 @@ namespace axflow_event
 
     class Analyser : Device
     {
-        public string Quality { get; set; }
         public int CulturePercentage { get; set; }
         public Analyser()
         {
