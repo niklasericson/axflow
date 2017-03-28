@@ -15,13 +15,21 @@ namespace axflow_event
         private const string EhConnectionString = "Endpoint=sb://axflowdemo.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=9D1el2YabA+NvpcB280EkFaZamNwYUTT04ArznMaxE0=";
         private const string EhEntityPath = "axfloweventhub";
 
-        private static string[] nameArray = {   "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T",
+        private static string[] itemArray = {   "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T",
                                                 "P", "P", "P", "P", "P",
                                                 "H", "H", "H",
                                                 "C", "C",
                                                 "Con", "Con", "Con", "Con", "Con", "Con",
                                                 "A", "A", "A"};
-        private static int numDevices = nameArray.Length;
+
+        private static string[] itemNameArray = {   "Collection Tank", "Separator", "Separator tank", "Milk powder tank", "Homogeniser",
+                                                    "Culture tank","Incubation tank 1","Incubation tank 2","Buffer tank","Fruit tank",
+                                                    "Flavouring tank","Syrup tank","Culture tank 1","Culture tank 2","Mixer","Filling area","Incubation chamber","Separator pump","Pre-heater pump","Buffer pump",
+                                                    "Mixer pump 1","Mixer pump 2","Pre-heater 1","Pre-heater 2","Heater","Incubation cooler","Buffer cooler",
+                                                    "Metering and dosing device 1","Metering and dosing device 2","Metering and dosing device 3","Metering and dosing device 4","Metering and dosing device 5",
+                                                    "Filling machine","Raw material analyser","Finish product analyser 1","Finish product analyser 2"};
+
+        private static int numDevices = itemArray.Length;
 
         public static void Main(string[] args)
         {
@@ -45,11 +53,11 @@ namespace axflow_event
             Console.WriteLine("Press ENTER to start");
             Console.ReadLine();
             Console.WriteLine("Sending");
-            //while (true)
-            //{
+            while (true)
+            {
             await SendMessagesToEventHub(DeviceArray);
 
-            //}
+            }
             await eventHubClient.CloseAsync();
 
             Console.WriteLine("Press ENTER to exit");
@@ -59,6 +67,7 @@ namespace axflow_event
         // Creates an Event Hub client and sends 100 messages to the event hub.
         private static async Task SendMessagesToEventHub(Device[] DeviceArray)
         {
+            DateTime date = DateTime.Now;
             for (var i = 0; i < numDevices; i++)
             {
                 Random r = new Random();
@@ -73,44 +82,46 @@ namespace axflow_event
                     {
                         case "Pump":
                             Pump p = (Pump)DeviceArray[i];
-                            p.Speed = 200*rf;
-                            p.Temperature =  20* rf;
-                            p.SuctionPressure = 10 * rf;
-                            p.DischargePressure = 10 * rf;
-                            p.FlowRate = p.Speed / 10;
+                            p.Speed = 100 + rf; //rpm
+                            p.Temperature =  70 + rf; // degrees Celcius
+                            p.SuctionPressure = 2 + (float)0.1*rf; // Bar
+                            p.DischargePressure = 5 + (float)0.1 * rf; // Bar
+                            p.FlowRate = p.Speed / 1000; // m3/s
                             p.Vibration = 100 * rf;
-                            p.Time = DateTime.Now.ToString();
+                            p.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(p);
                             break;
                         case "Tank":
                             Tank t = (Tank)DeviceArray[i];
-                            t.Temperature = 5*rf;
-                            t.Time = DateTime.Now.ToString();
+                            t.Temperature = 5 + (float)0.1*rf; // degrees Celcius
+                            t.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(t);
                             break;
                         case "Cooler":
                             Cooler c = (Cooler)DeviceArray[i];
-                            c.Temperature = 5 * rf;
-                            c.Time = DateTime.Now.ToString();
+                            c.Temperature = -10 + (float)0.1 * rf; // degrees Celcius
+                            c.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(c);
                             break;
                         case "Heater":
                             Heater h = (Heater)DeviceArray[i];
-                            h.Temperature = 5 * rf;
-                            h.Time = DateTime.Now.ToString();
+                            h.Temperature = 200 + 10 * rf; // degrees Celcius
+                            h.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(h);
                             break;
                         case "Controller":
                             Controller con = (Controller)DeviceArray[i];
-                            con.FlowRate = 1200 * rf;
-                            con.Time = DateTime.Now.ToString();
+                            con.Temperature = 20 + (float)0.1 * rf; // degrees Celcius
+                            con.FlowRate = (float)(0.1 + rf);
+                            con.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(con);
                             break;
                         case "Analyser":
                             Analyser a = (Analyser)DeviceArray[i];
-                            float percentage = 100 * rf;
+                            float percentage = 10*rf; //%
+                            a.Temperature = 20 + (float)0.1 * rf; // degrees Celcius
                             a.CulturePercentage = (int)percentage;
-                            a.Time = DateTime.Now.ToString();
+                            a.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(a);
                             break;
                         default:
@@ -118,7 +129,7 @@ namespace axflow_event
                     }
 
                     //var message = $"Message";
-                    Console.WriteLine($"Sending message: {message}");
+                    //Console.WriteLine($"Sending message: {message}");
                     await eventHubClient.SendAsync(new EventData(Encoding.UTF8.GetBytes(message)));
                 }
                 catch (Exception exception)
@@ -139,43 +150,45 @@ namespace axflow_event
 
             for (var i = 0; i < numDevices; i++)
             {
-                string caseSwitch = nameArray[i];
+                string caseSwitch = itemArray[i];
+                string itemName = itemNameArray[i];
+
                 switch (caseSwitch)
                 {
                     case "P":
                         Device p = new Pump();
                         p.Id = i;
-                        p.Name = String.Join(p.Name, i);
+                        p.Name = itemName;
                         resultArray[i] = p;
                         break;
                     case "H":
                         Heater h = new Heater();
                         h.Id = i;
-                        h.Name = String.Join(h.Name, i);
+                        h.Name = itemName;
                         resultArray[i] = h;
                         break;
                     case "C":
                         Cooler c = new Cooler();
                         c.Id = i;
-                        c.Name = String.Join(c.Name, i);
+                        c.Name = itemName;
                         resultArray[i] = c;
                         break;
                     case "Con":
                         Controller con = new Controller();
                         con.Id = i;
-                        con.Name = String.Join(con.Name, i);
+                        con.Name = itemName;
                         resultArray[i] = con;
                         break;
                     case "A":
                         Analyser a = new Analyser();
                         a.Id = i;
-                        a.Name = String.Join(a.Name, i);
+                        a.Name = itemName;
                         resultArray[i] = a;
                         break;
                     default:
                         Tank t = new Tank();
                         t.Id = i;
-                        t.Name = String.Join(t.Name, i);
+                        t.Name = itemName;
                         resultArray[i] = t;
                         break;
                 }
@@ -188,16 +201,22 @@ namespace axflow_event
     class Device
     {
         public int Id { get; set; }
-        public string Time { get; set; }
+        public DateTime Time { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
         public string Status { get; set; }
+        public float Temperature { get; set; }
+        public float Speed { get; set; }
+        public float FlowRate { get; set; }
+        public float SuctionPressure { get; set; }
+        public float DischargePressure { get; set; }
+        public float Vibration { get; set; }
+        public int CulturePercentage { get; set; }
 
     }
 
     class Tank : Device
     {
-        public float Temperature { get; set; }
 
         public Tank()
         {
@@ -209,13 +228,6 @@ namespace axflow_event
 
     class Pump : Device
     {
-        public float Temperature { get; set; }
-        public float Speed { get; set; }
-        public float FlowRate { get; set; }
-        public float SuctionPressure { get; set; }
-        public float DischargePressure { get; set; }
-        public float Vibration { get; set; }
-
         public Pump()
         {
             this.Name = "Pump";
@@ -227,9 +239,6 @@ namespace axflow_event
 
     class Heater : Device
     {
-        public float Temperature { get; set; }
-
-        public float FlowRate { get; set; }
 
         public Heater()
         {
@@ -242,10 +251,6 @@ namespace axflow_event
 
     class Cooler : Device
     {
-        public float Temperature { get; set; }
-
-        public float FlowRate { get; set; }
-
         public Cooler()
         {
             this.Name = "Cooler";
@@ -256,7 +261,6 @@ namespace axflow_event
 
     class Controller : Device
     {
-        public float FlowRate { get; set; }
 
         public Controller()
         {
@@ -268,7 +272,6 @@ namespace axflow_event
 
     class Analyser : Device
     {
-        public int CulturePercentage { get; set; }
         public Analyser()
         {
             this.Name = "Analyser";
