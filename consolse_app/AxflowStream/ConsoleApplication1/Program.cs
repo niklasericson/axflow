@@ -104,7 +104,7 @@ namespace axflow_event
                     {
                         case "Pump":
                             Pump p = (Pump)DeviceArray[i];
-                            p.Speed = 100 + rf; //rpm
+                            p.Speed = p.Speed + rf; //rpm
                             p.Temperature = 70 + rf; // degrees Celcius
                             p.SuctionPressure = 2 + (float)0.1 * rf; // Bar
                             p.DischargePressure = 5 + (float)0.1 * rf; // Bar
@@ -255,6 +255,7 @@ namespace axflow_event
             this.Name = "Pump";
             this.Type = this.Name;
             this.Status = "ok";
+            this.Speed = 1000;
         }
 
     }
