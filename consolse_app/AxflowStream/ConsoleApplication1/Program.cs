@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-
 using Microsoft.Azure.EventHubs;
 using System.Text;
-
+using System.Threading;
 
 namespace axflow_event
 {
@@ -52,22 +51,44 @@ namespace axflow_event
 
             Console.WriteLine("Press ENTER to start");
             Console.ReadLine();
-            Console.WriteLine("Sending");
-            while (true)
+
+            ConsoleKeyInfo cki = new ConsoleKeyInfo();
+
+            do
             {
-            await SendMessagesToEventHub(DeviceArray);
+                Console.WriteLine("\nPress: \n 'f' to inject fault,\n 'r' to reset \n 'x' key to quit.");
 
-            }
+                while (Console.KeyAvailable == false)
+
+                await SendMessagesToEventHub(DeviceArray);
+
+                cki = Console.ReadKey(true);
+                if (cki.Key == ConsoleKey.F)
+                {
+                    Console.WriteLine("You pressed the '{0}' key.", cki.Key);
+                    DeviceArray[20].Status = "Replace";
+                    DeviceArray[20].Speed = 5;
+                    Console.WriteLine("A fault was injected");
+                }
+                if (cki.Key == ConsoleKey.R)
+                {
+                    Console.WriteLine("You pressed the '{0}' key.", cki.Key);
+                    DeviceArray[20].Status = "ok";
+                    DeviceArray[20].Speed = DeviceArray[21].Speed;
+                    Console.WriteLine("The fault was reset");
+                }
+
+            } while (cki.Key != ConsoleKey.X);
+
             await eventHubClient.CloseAsync();
-
-            Console.WriteLine("Press ENTER to exit");
-            Console.ReadLine();
+            Console.WriteLine("Good bye!");
+            Thread.Sleep(250);
         }
 
-        // Creates an Event Hub client and sends 100 messages to the event hub.
+        // Creates an Event Hub client and sends the device info to the event hub.
         private static async Task SendMessagesToEventHub(Device[] DeviceArray)
         {
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.Now.ToLocalTime();
             for (var i = 0; i < numDevices; i++)
             {
                 Random r = new Random();
@@ -76,24 +97,25 @@ namespace axflow_event
                 var message = "";
                 string caseSwitch = DeviceArray[i].Type;
 
-                try {
-                   
+                try
+                {
+
                     switch (caseSwitch)
                     {
                         case "Pump":
                             Pump p = (Pump)DeviceArray[i];
                             p.Speed = 100 + rf; //rpm
-                            p.Temperature =  70 + rf; // degrees Celcius
-                            p.SuctionPressure = 2 + (float)0.1*rf; // Bar
+                            p.Temperature = 70 + rf; // degrees Celcius
+                            p.SuctionPressure = 2 + (float)0.1 * rf; // Bar
                             p.DischargePressure = 5 + (float)0.1 * rf; // Bar
-                            p.FlowRate = p.Speed / 1000; // m3/s
+                            p.FlowRate = p.Speed / 10; // dm3/s
                             p.Vibration = 100 * rf;
                             p.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(p);
                             break;
                         case "Tank":
                             Tank t = (Tank)DeviceArray[i];
-                            t.Temperature = 5 + (float)0.1*rf; // degrees Celcius
+                            t.Temperature = 5 + (float)0.1 * rf; // degrees Celcius
                             t.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(t);
                             break;
@@ -118,7 +140,7 @@ namespace axflow_event
                             break;
                         case "Analyser":
                             Analyser a = (Analyser)DeviceArray[i];
-                            float percentage = 10*rf; //%
+                            float percentage = 10 * rf; //%
                             a.Temperature = 20 + (float)0.1 * rf; // degrees Celcius
                             a.CulturePercentage = (int)percentage;
                             a.Time = date;
