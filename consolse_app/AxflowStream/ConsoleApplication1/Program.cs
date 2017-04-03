@@ -56,7 +56,7 @@ namespace axflow_event
 
             do
             {
-                Console.WriteLine("\nPress: \n 'f' to inject fault,\n 'r' to reset \n 'x' key to quit.");
+                Console.WriteLine("\nPress: \n 'f' to inject fault,\n 'r' to reset \n 'x' to quit.");
 
                 while (Console.KeyAvailable == false)
 
@@ -66,7 +66,7 @@ namespace axflow_event
                 if (cki.Key == ConsoleKey.F)
                 {
                     Console.WriteLine("You pressed the '{0}' key.", cki.Key);
-                    DeviceArray[20].Status = "Replace";
+                    DeviceArray[20].Status = "Replace within 72 hours";
                     DeviceArray[20].Speed = 5;
                     Console.WriteLine("A fault was injected");
                 }
@@ -89,6 +89,7 @@ namespace axflow_event
         private static async Task SendMessagesToEventHub(Device[] DeviceArray)
         {
             DateTime date = DateTime.Now.ToLocalTime();
+            int t_d = date.Second;
             for (var i = 0; i < numDevices; i++)
             {
                 Random r = new Random();
@@ -99,16 +100,15 @@ namespace axflow_event
 
                 try
                 {
-
                     switch (caseSwitch)
                     {
                         case "Pump":
                             Pump p = (Pump)DeviceArray[i];
                             p.Speed = p.Speed + rf; //rpm
                             p.Temperature = 70 + rf; // degrees Celcius
-                            p.SuctionPressure = 2 + (float)0.1 * rf; // Bar
-                            p.DischargePressure = 5 + (float)0.1 * rf; // Bar
-                            p.FlowRate = p.Speed / 10; // dm3/s
+                            p.SuctionPressure = (float)(Math.Sin(2 * t_d) + Math.Cos(3 * t_d) + 1 * rf); // Bar
+                            p.DischargePressure = (float)(Math.Sin(3* t_d + 2) + Math.Cos(1 * t_d + 1) + 1 * rf); // Bar
+                            p.FlowRate = (float)((p.Speed/100)*Math.Sin(3 * t_d + 2) + Math.Cos(1 * t_d + 1) + 5* rf); // dm3/s
                             p.Vibration = 100 * rf;
                             p.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(p);
@@ -134,7 +134,7 @@ namespace axflow_event
                         case "Controller":
                             Controller con = (Controller)DeviceArray[i];
                             con.Temperature = 20 + (float)0.1 * rf; // degrees Celcius
-                            con.FlowRate = (float)(0.1 + rf);
+                            con.FlowRate = (float)(50 + 10*rf);
                             con.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(con);
                             break;
