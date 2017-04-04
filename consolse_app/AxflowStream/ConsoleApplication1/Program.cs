@@ -67,6 +67,7 @@ namespace axflow_event
                 {
                     Console.WriteLine("You pressed the '{0}' key.", cki.Key);
                     DeviceArray[20].Status = "Replace within 72 hours";
+                    DeviceArray[20].Vibration = 50;
                     DeviceArray[20].Speed = 5;
                     Console.WriteLine("A fault was injected");
                 }
@@ -74,6 +75,7 @@ namespace axflow_event
                 {
                     Console.WriteLine("You pressed the '{0}' key.", cki.Key);
                     DeviceArray[20].Status = "ok";
+                    DeviceArray[20].Vibration = DeviceArray[21].Vibration;
                     DeviceArray[20].Speed = DeviceArray[21].Speed;
                     Console.WriteLine("The fault was reset");
                 }
@@ -105,11 +107,11 @@ namespace axflow_event
                         case "Pump":
                             Pump p = (Pump)DeviceArray[i];
                             p.Speed = p.Speed + rf; //rpm
-                            p.Temperature = 70 + rf; // degrees Celcius
+                            p.Temperature = 5 + (float)0.1 * rf; // degrees Celcius
                             p.SuctionPressure = (float)(Math.Sin(1 * t_d) + 0.1* rf); // Bar
                             p.DischargePressure = (float)(Math.Sin(2 * t_d) + 0.1*rf); // Bar
-                            p.FlowRate = (float)(p.Speed/100); // dm3/s
-                            p.Vibration = 100 * rf;
+                            p.FlowRate = p.Speed/100; // dm3/s
+                            p.Vibration = (float)0.1 * rf;
                             p.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(p);
                             break;
@@ -117,32 +119,37 @@ namespace axflow_event
                             Tank t = (Tank)DeviceArray[i];
                             t.Temperature = 5 + (float)0.1 * rf; // degrees Celcius
                             t.Time = date;
+                            t.Vibration = (float)0.1 * rf;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(t);
                             break;
                         case "Cooler":
                             Cooler c = (Cooler)DeviceArray[i];
-                            c.Temperature = -10 + (float)0.1 * rf; // degrees Celcius
+                            c.Temperature = 5 + (float)0.1 * rf; // degrees Celcius
                             c.Time = date;
+                            c.Vibration = (float)0.1 * rf;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(c);
                             break;
                         case "Heater":
                             Heater h = (Heater)DeviceArray[i];
-                            h.Temperature = 200 + 10 * rf; // degrees Celcius
+                            h.Temperature = 5 + (float)0.1 * rf; // degrees Celcius
                             h.Time = date;
+                            h.Vibration = (float)0.1 * rf;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(h);
                             break;
                         case "Controller":
                             Controller con = (Controller)DeviceArray[i];
-                            con.Temperature = 20 + (float)0.1 * rf; // degrees Celcius
+                            con.Temperature = 5 + (float)0.1 * rf; // degrees Celcius
                             con.FlowRate = (float)(50 + 10*rf);
+                            con.Vibration = (float)0.1 * rf;
                             con.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(con);
                             break;
                         case "Analyser":
                             Analyser a = (Analyser)DeviceArray[i];
                             float percentage = 10 * rf; //%
-                            a.Temperature = 20 + (float)0.1 * rf; // degrees Celcius
+                            a.Temperature = 5 + (float)0.1 * rf; // degrees Celcius
                             a.CulturePercentage = (int)percentage;
+                            a.Vibration = (float)0.1 * rf;
                             a.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(a);
                             break;
