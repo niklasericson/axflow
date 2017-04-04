@@ -22,3 +22,4 @@ C:\Users\niericso\Documents\axflow\consolse_app\AxflowStream\ConsoleApplication1
 C:\Users\niericso\Documents\axflow\consolse_app\AxflowStream\ConsoleApplication1\bin\Debug\ConsoleApplication1.application
 C:\Users\niericso\Documents\axflow\consolse_app\AxflowStream\ConsoleApplication1\obj\Debug\ConsoleApplication1.exe.manifest
 C:\Users\niericso\Documents\axflow\consolse_app\AxflowStream\ConsoleApplication1\obj\Debug\ConsoleApplication1.application
+C:\Users\niericso\Documents\axflow\consolse_app\AxflowStream\ConsoleApplication1\obj\Debug\Axflow Stream.csprojResolveAssemblyReference.cache

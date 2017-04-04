@@ -106,9 +106,9 @@ namespace axflow_event
                             Pump p = (Pump)DeviceArray[i];
                             p.Speed = p.Speed + rf; //rpm
                             p.Temperature = 70 + rf; // degrees Celcius
-                            p.SuctionPressure = (float)(Math.Sin(2 * t_d) + Math.Cos(3 * t_d) + 1 * rf); // Bar
-                            p.DischargePressure = (float)(Math.Sin(3* t_d + 2) + Math.Cos(1 * t_d + 1) + 1 * rf); // Bar
-                            p.FlowRate = (float)((p.Speed/100)*Math.Sin(3 * t_d + 2) + Math.Cos(1 * t_d + 1) + 5* rf); // dm3/s
+                            p.SuctionPressure = (float)(Math.Sin(1 * t_d) + 0.1* rf); // Bar
+                            p.DischargePressure = (float)(Math.Sin(2 * t_d) + 0.1*rf); // Bar
+                            p.FlowRate = (float)(p.Speed/100); // dm3/s
                             p.Vibration = 100 * rf;
                             p.Time = date;
                             message = Newtonsoft.Json.JsonConvert.SerializeObject(p);
