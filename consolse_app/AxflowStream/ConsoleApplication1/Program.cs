@@ -11,8 +11,8 @@ namespace axflow_event
     public class Program
     {
         private static EventHubClient eventHubClient;
-        private const string EhConnectionString = "Endpoint=sb://axflowdemo.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=9D1el2YabA+NvpcB280EkFaZamNwYUTT04ArznMaxE0=";
-        private const string EhEntityPath = "axfloweventhub";
+        private const string EhConnectionString = "EnConnectionString";
+        private const string EhEntityPath = "EhEntityPath";
 
         private static string[] itemArray = {   "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T", "T",
                                                 "P", "P", "P", "P", "P",
